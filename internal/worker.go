@@ -219,7 +219,7 @@ func ReplayWorkflowExecution(ctx context.Context, service workflowserviceclient.
 // ReplayWorkflowHistory executes a single decision task for the given history.
 // Use for testing the backwards compatibility of code changes and troubleshooting workflows in a debugger.
 // The logger is an optional parameter. Defaults to the noop logger.
-func ReplayWorkflowHistory(logger *zap.Logger, history *shared.History) error {
+func ReplayWorkflowHistory(logger *zap.Logger, domain string, history *shared.History) error {
 
 	if logger == nil {
 		logger = zap.NewNop()
@@ -229,15 +229,14 @@ func ReplayWorkflowHistory(logger *zap.Logger, history *shared.History) error {
 	controller := gomock.NewController(testReporter)
 	service := workflowservicetest.NewMockClient(controller)
 
-	domain := "ReplayDomain"
-
 	return replayWorkflowHistory(logger, service, domain, history)
 }
 
 // ReplayWorkflowHistoryFromJSONFile executes a single decision task for the given json history file.
 // Use for testing the backwards compatibility of code changes and troubleshooting workflows in a debugger.
 // The logger is an optional parameter. Defaults to the noop logger.
-func ReplayWorkflowHistoryFromJSONFile(logger *zap.Logger, jsonfileName string) error {
+// The Default replay domain is "ReplayDomain"
+func ReplayWorkflowHistoryFromJSONFile(logger *zap.Logger, domain, jsonfileName string) error {
 
 	history, err := extractHistoryFromFile(jsonfileName)
 
@@ -252,8 +251,6 @@ func ReplayWorkflowHistoryFromJSONFile(logger *zap.Logger, jsonfileName string) 
 	testReporter := logger.Sugar()
 	controller := gomock.NewController(testReporter)
 	service := workflowservicetest.NewMockClient(controller)
-
-	domain := "ReplayDomain"
 
 	return replayWorkflowHistory(logger, service, domain, history)
 }
@@ -296,7 +293,7 @@ func replayWorkflowHistory(logger *zap.Logger, service workflowserviceclient.Int
 	iterator := &historyIteratorImpl{
 		nextPageToken: task.NextPageToken,
 		execution:     task.WorkflowExecution,
-		domain:        "ReplayDomain",
+		domain:        domain,
 		service:       service,
 		metricsScope:  metricScope,
 		maxEventID:    task.GetStartedEventId(),
