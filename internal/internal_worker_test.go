@@ -154,13 +154,13 @@ func (s *internalWorkerTestSuite) TestReplayWorkflowHistory() {
 
 	history := &shared.History{Events: testEvents}
 	logger := getLogger()
-	err := ReplayWorkflowHistory(logger, history)
+	err := ReplayWorkflowHistory(logger, "ReplayDomain", history)
 	require.NoError(s.T(), err)
 }
 
 func (s *internalWorkerTestSuite) TestReplayWorkflowHistoryFromFile() {
 	logger := getLogger()
-	err := ReplayWorkflowHistoryFromJSONFile(logger, "testdata/sampleHistory.json")
+	err := ReplayWorkflowHistoryFromJSONFile(logger, "ReplayDomain", "testdata/sampleHistory.json")
 	require.NoError(s.T(), err)
 }
 

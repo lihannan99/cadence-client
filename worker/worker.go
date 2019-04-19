@@ -83,8 +83,8 @@ func EnableVerboseLogging(enable bool) {
 // ReplayWorkflowHistory executes a single decision task for the given json history file.
 // Use for testing the backwards compatibility of code changes and troubleshooting workflows in a debugger.
 // The logger is an optional parameter. Defaults to the noop logger.
-func ReplayWorkflowHistory(logger *zap.Logger, history *shared.History) error {
-	return internal.ReplayWorkflowHistory(logger, history)
+func ReplayWorkflowHistory(logger *zap.Logger, domain string, history *shared.History) error {
+	return internal.ReplayWorkflowHistory(logger, domain, history)
 }
 
 // ReplayWorkflowHistoryFromJSONFile executes a single decision task for the json history file downloaded from the cli.
@@ -92,8 +92,8 @@ func ReplayWorkflowHistory(logger *zap.Logger, history *shared.History) error {
 // See https://github.com/uber/cadence/blob/master/tools/cli/README.md for full documentation
 // Use for testing the backwards compatibility of code changes and troubleshooting workflows in a debugger.
 // The logger is an optional parameter. Defaults to the noop logger.
-func ReplayWorkflowHistoryFromJSONFile(logger *zap.Logger, jsonfileName string) error {
-	return internal.ReplayWorkflowHistoryFromJSONFile(logger, jsonfileName)
+func ReplayWorkflowHistoryFromJSONFile(logger *zap.Logger, domain, jsonfileName string) error {
+	return internal.ReplayWorkflowHistoryFromJSONFile(logger, domain, jsonfileName)
 }
 
 // ReplayWorkflowExecution loads a workflow execution history from the Cadence service and executes a single decision task for it.
